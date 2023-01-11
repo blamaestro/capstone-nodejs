@@ -1,7 +1,24 @@
-export const getUsers = () => {};
+import Users from '../models/users.js';
 
-export const getUserLogs = () => {};
+const controller = {};
 
-export const createUser = () => {};
+controller.getUsers = async (req, res) => {
+  const users = await Users.all('SELECT id, username FROM Users');
+  res.json(users);
+};
 
-export const createUserExercise = () => {};
+controller.getUserLogs = async (req, res) => {};
+
+controller.createUser = async (req, res) => {
+  const { username } = req.body;
+  await Users.run('INSERT INTO Users (username) VALUES (?)', username);
+  res.status(201).json();
+};
+
+controller.createUserExercise = async (req, res) => {
+  // const { id, username } = req.body;
+  // await Users.run('INSERT INTO Users (id,username) VALUES (?,?)', id, username);
+  // res.status(201).end();
+};
+
+export default controller;
