@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { Database } from 'sqlite-async';
-import { getAbsolutePath } from '../utils/path.js';
+import { getAbsolutePath } from '../utils/index.js';
 
 let database;
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAbsolutePath } from '../utils/path.js';
+import { getAbsolutePath } from '../utils/index.js';
 
 const router = express.Router();
 
