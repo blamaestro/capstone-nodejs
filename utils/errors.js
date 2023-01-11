@@ -10,3 +10,11 @@ export function parseSQLError(error) {
   if (errorMessage) return errorMessage;
   return { statusCode: 500, message: 'Error while connecting to database' };
 }
+
+export function sendErrorResponse(error, res) {
+  const { statusCode, message } = parseSQLError(error);
+  res.status(statusCode).json({
+    status: 'Error',
+    message,
+  });
+}
