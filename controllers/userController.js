@@ -23,6 +23,10 @@ controller.getUserLogs = async (req, res) => {
       'SELECT username FROM Users WHERE id = ?',
       userId
     );
+    if (!user?.username) {
+      throw new Error('Unable to get logs of non-existing user');
+    }
+
     let exercises = await Users.all(
       'SELECT id, description, duration, date FROM Exercises WHERE userId = ? ORDER BY id ASC',
       userId
@@ -61,10 +65,16 @@ controller.createUser = async (req, res) => {
 
 controller.createUserExercise = async (req, res) => {
   const userId = +req.params.id;
-  const { description, duration } = req.body;
+  const { description } = req.body;
+  const duration = +req.body.duration;
   const date = req.body.date || getTodayISO();
 
   try {
+    const user = await Users.get('SELECT * FROM Users WHERE id = ?', userId);
+    if (!user?.username) {
+      throw new Error('Unable to create exercise for non-existing user');
+    }
+
     const exercise = await Users.run(
       'INSERT INTO Exercises (userId,description,duration,date) VALUES (?,?,?,?)',
       userId,
