@@ -8,7 +8,7 @@ export function parseValidationError(req, res) {
   if (errors.isEmpty()) return false;
 
   const { param, msg } = errors.array()[0];
-  const payload = getErrorPayload(`${param} ${msg}`);
+  const payload = getErrorPayload(`[${param}] ${msg}`);
   res.status(422).json(payload);
   return true;
 }

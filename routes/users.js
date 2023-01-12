@@ -1,5 +1,5 @@
 import express from 'express';
-import { body } from 'express-validator';
+import { body, query } from 'express-validator';
 import userController from '../controllers/userController.js';
 import { validationErrorMessages } from '../constants/errors.js';
 import { validateRequest } from '../utils/errors.js';
@@ -8,7 +8,16 @@ const router = express.Router();
 
 router.get('/', userController.getUsers);
 
-router.get('/:id/logs', userController.getUserLogs);
+router.get(
+  '/:id/logs',
+  query('from').optional().isDate().withMessage(validationErrorMessages.date),
+  query('to').optional().isDate().withMessage(validationErrorMessages.date),
+  query('limit')
+    .optional()
+    .isNumeric()
+    .withMessage(validationErrorMessages.numeric),
+  validateRequest(userController.getUserLogs)
+);
 
 router.post(
   '/',

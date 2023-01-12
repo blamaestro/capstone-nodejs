@@ -1,4 +1,4 @@
-import Users from '../models/users.js';
+import Users from '../models/users/users.js';
 import { getTodayISO, sendErrorResponse } from '../utils/index.js';
 
 const controller = {};
