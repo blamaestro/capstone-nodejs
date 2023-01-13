@@ -1,6 +1,6 @@
 import express from 'express';
 import { body, query } from 'express-validator';
-import userController from '../controllers/userController.js';
+import userController from '../controllers/users.controller.js';
 import { validationErrorMessages } from '../constants/errors.js';
 import { validateRequest } from '../utils/errors.js';
 

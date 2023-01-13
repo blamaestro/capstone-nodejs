@@ -1,5 +1,5 @@
 import Users from '../models/users/users.js';
-import { getTodayISO, sendErrorResponse } from '../utils/index.js';
+import { getTodayISO, sendError } from '../utils/index.js';
 
 const controller = {};
 
@@ -10,7 +10,7 @@ controller.getUsers = async (req, res) => {
     );
     res.json(users);
   } catch (err) {
-    sendErrorResponse(err, res);
+    sendError(err, res);
   }
 };
 
@@ -45,7 +45,7 @@ controller.getUserLogs = async (req, res) => {
     };
     res.json(payload);
   } catch (err) {
-    sendErrorResponse(err, res);
+    sendError(err, res);
   }
 };
 
@@ -59,7 +59,7 @@ controller.createUser = async (req, res) => {
     const payload = { id: user.lastID, username };
     res.status(201).json(payload);
   } catch (err) {
-    sendErrorResponse(err, res);
+    sendError(err, res);
   }
 };
 
@@ -92,7 +92,7 @@ controller.createUserExercise = async (req, res) => {
     };
     res.status(201).json(payload);
   } catch (err) {
-    sendErrorResponse(err, res);
+    sendError(err, res);
   }
 };
 
