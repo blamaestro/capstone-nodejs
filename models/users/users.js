@@ -4,8 +4,8 @@ import { getAbsolutePath } from '../../utils/index.js';
 
 let database;
 
-const USERS_DB_PATH = getAbsolutePath('usersDB.db', import.meta.url);
-const USERS_SCHEMA_PATH = getAbsolutePath('usersSchema.sql', import.meta.url);
+const USERS_DB_PATH = getAbsolutePath('users.db', import.meta.url);
+const USERS_SCHEMA_PATH = getAbsolutePath('users.sql', import.meta.url);
 
 try {
   database = await Database.open(USERS_DB_PATH);
