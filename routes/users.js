@@ -2,7 +2,7 @@ import express from 'express';
 import { body, query } from 'express-validator';
 import userController from '../controllers/users.controller.js';
 import { validationErrorMessages } from '../constants/errors.js';
-import { validateRequest } from '../utils/validation.js';
+import { validateRequest } from '../utils/index.js';
 
 const router = express.Router();
 
@@ -10,9 +10,18 @@ router.get('/', userController.getUsers);
 
 router.get(
   '/:id/logs',
-  query('from').optional().isDate().withMessage(validationErrorMessages.date),
-  query('to').optional().isDate().withMessage(validationErrorMessages.date),
+  query('from')
+    .escape()
+    .optional()
+    .isDate()
+    .withMessage(validationErrorMessages.date),
+  query('to')
+    .escape()
+    .optional()
+    .isDate()
+    .withMessage(validationErrorMessages.date),
   query('limit')
+    .escape()
     .optional()
     .isNumeric()
     .withMessage(validationErrorMessages.numeric),

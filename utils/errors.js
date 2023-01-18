@@ -6,8 +6,7 @@ export function parseSQLError(errorMessage) {
   return SQLErrorMessages.find(e => errorMessage.includes(e.constraint));
 }
 
-export function parseError(error) {
-  const errorMessage = error.message;
+export function parseError(errorMessage) {
   const error500 = { statusCode: 500, message: errorMessage };
 
   if (errorMessage.includes('SQLITE')) {
@@ -17,8 +16,9 @@ export function parseError(error) {
   return error500;
 }
 
-export function sendError(error, res) {
-  const { statusCode, message } = parseError(error);
-  const payload = getErrorPayload(message);
+export function sendError(error, res, customStatusCode) {
+  const parsedError = parseError(error);
+  const statusCode = customStatusCode || parsedError.statusCode;
+  const payload = getErrorPayload(parsedError.message);
   res.status(statusCode).json(payload);
 }

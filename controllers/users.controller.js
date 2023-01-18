@@ -1,5 +1,10 @@
 import Users from '../models/users/users.js';
-import { getTodayISO, sendError } from '../utils/index.js';
+import {
+  getTodayISO,
+  getDateQuery,
+  getLimitQuery,
+  sendError,
+} from '../utils/index.js';
 
 const controller = {};
 
@@ -10,7 +15,7 @@ controller.getUsers = async (req, res) => {
     );
     res.json(users);
   } catch (err) {
-    sendError(err, res);
+    sendError(err.message, res);
   }
 };
 
@@ -24,28 +29,30 @@ controller.getUserLogs = async (req, res) => {
       userId
     );
     if (!user?.username) {
-      throw new Error('Unable to get logs of non-existing user');
+      sendError('Unable to get logs of non-existing user', res, 404);
+      return;
     }
 
-    let exercises = await Users.all(
-      'SELECT id, description, duration, date FROM Exercises WHERE userId = ? ORDER BY id ASC',
+    const totalCount = await Users.get(
+      'SELECT COUNT(*) count FROM Exercises WHERE userId = ?',
       userId
     );
-    const exerciseCount = exercises.length;
-
-    if (from) exercises = exercises.filter(e => e.date >= from);
-    if (to) exercises = exercises.filter(e => e.date < to);
-    if (limit) exercises = exercises.slice(0, limit);
+    const exercises = await Users.all(
+      `SELECT id, description, duration, date, userId FROM Exercises
+      WHERE userId = ? ${getDateQuery(from, to)}
+      ORDER BY date ASC ${getLimitQuery(limit)}`,
+      userId
+    );
 
     const payload = {
       id: userId,
       username: user.username,
-      count: exerciseCount,
+      count: totalCount.count,
       log: exercises,
     };
     res.json(payload);
   } catch (err) {
-    sendError(err, res);
+    sendError(err.message, res);
   }
 };
 
@@ -59,7 +66,7 @@ controller.createUser = async (req, res) => {
     const payload = { id: user.lastID, username };
     res.status(201).json(payload);
   } catch (err) {
-    sendError(err, res);
+    sendError(err.message, res);
   }
 };
 
@@ -92,7 +99,7 @@ controller.createUserExercise = async (req, res) => {
     };
     res.status(201).json(payload);
   } catch (err) {
-    sendError(err, res);
+    sendError(err.message, res);
   }
 };
 
